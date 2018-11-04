@@ -1,0 +1,30 @@
+buildscript {
+    repositories {
+        maven { url 'https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-gradle-api/26.1.2/lint-gradle-api-26.1.2.jar' }
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

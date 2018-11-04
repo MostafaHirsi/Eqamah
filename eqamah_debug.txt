@@ -1,0 +1,12 @@
+[18:07:16]: Spawning /Users/mostafahirsi/Documents/flutter/bin/flutter with args ["run","--machine","-t","lib/main.dart","-d","LGH93099bc4c00","--start-paused"]
+[18:07:16]: ..  in /Users/mostafahirsi/Documents/hello_world
+[18:07:18]: <== [{"event":"daemon.connected","params":{"version":"0.4.2","pid":19006}}]
+[18:07:18]: <== [{"event":"app.start","params":{"appId":"4c13b954-e74f-49a3-b1e4-4db2c1892ff6","deviceId":"LGH93099bc4c00","directory":"/Users/mostafahirsi/Documents/hello_world","supportsRestart":true}}]
+[18:07:20]: <== Launching lib/main.dart on LG H930 in debug mode...
+[18:07:20]: <== [{"event":"app.progress","params":{"appId":"4c13b954-e74f-49a3-b1e4-4db2c1892ff6","id":"0","progressId":null,"message":"Initializing gradle..."}}]
+[18:07:21]: <== [{"event":"app.progress","params":{"appId":"4c13b954-e74f-49a3-b1e4-4db2c1892ff6","id":"0","progressId":null,"finished":true}}]
+[18:07:21]: <== [{"event":"app.progress","params":{"appId":"4c13b954-e74f-49a3-b1e4-4db2c1892ff6","id":"1","progressId":null,"message":"Resolving dependencies..."}}]
+[18:07:24]: <== [{"event":"app.progress","params":{"appId":"4c13b954-e74f-49a3-b1e4-4db2c1892ff6","id":"1","progressId":null,"finished":true}}]
+[18:07:25]: <== [{"event":"app.progress","params":{"appId":"4c13b954-e74f-49a3-b1e4-4db2c1892ff6","id":"2","progressId":null,"message":"Running 'gradlew assembleDebug'..."}}]
+[18:07:32]: <== [{"event":"app.progress","params":{"appId":"4c13b954-e74f-49a3-b1e4-4db2c1892ff6","id":"2","progressId":null,"finished":true}}]
+[18:07:33]: <== Built build/app/outputs/apk/debug/app-debug.apk.
