@@ -2,7 +2,6 @@ import 'package:eqamah/views/pages/demo_map.dart';
 import 'package:eqamah/views/pages/mapview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:map_view/map_view.dart';
 
 class DashboardDrawer extends StatelessWidget {
   DashboardDrawer({
