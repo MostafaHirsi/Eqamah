@@ -1,5 +1,8 @@
+import 'package:eqamah/views/pages/demo_map.dart';
+import 'package:eqamah/views/pages/mapview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:map_view/map_view.dart';
 
 class DashboardDrawer extends StatelessWidget {
   DashboardDrawer({
@@ -26,8 +29,19 @@ class DashboardDrawer extends StatelessWidget {
     dynamic profileTap = () {
       Navigator.pop(context);
     };
+    dynamic mapTap = () {
+      Navigator.pop(context);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext buildcontext) => new MapsDemo()));
+    };
     drawerItems.add(new DrawerItem(
         icon: Icons.people, tileTitle: "Profile", onTap: profileTap));
+    drawerItems.add(new DrawerItem(
+        icon: Icons.map, tileTitle: "Mosques", onTap: mapTap));
+    drawerItems.add(new DrawerItem(
+        icon: Icons.settings, tileTitle: "Settings", onTap: profileTap));
   }
 }
 
@@ -91,13 +105,13 @@ class DrawerItem extends StatelessWidget {
         leading: Icon(_icon),
         title: Text(_tileTitle),
         onTap: onTap,
-        trailing: CircleAvatar(
-          radius: 10.0,
-          child: Text(
-            "2",
-            style: TextStyle(color: Colors.white, fontSize: 12.0),
-          ),
-        ),
+        // trailing: CircleAvatar(
+        //   radius: 10.0,
+        //   child: Text(
+        //     "2",
+        //     style: TextStyle(color: Colors.white, fontSize: 12.0),
+        //   ),
+        // ),
       ),
     );
   }

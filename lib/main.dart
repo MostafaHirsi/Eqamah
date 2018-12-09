@@ -1,8 +1,10 @@
 import 'package:eqamah/centerbody.dart';
 import 'package:eqamah/views/loginform.dart';
 import 'package:flutter/material.dart';
+import 'package:map_view/map_view.dart';
 
 void main() {
+  MapView.setApiKey("AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg");
   runApp(new MyApp());
 }
 

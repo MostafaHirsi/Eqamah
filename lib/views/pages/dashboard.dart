@@ -6,6 +6,7 @@ import 'package:eqamah/views/controls/dashboard/dashboard_drawer.dart';
 import 'package:eqamah/views/controls/dashboard/dashboard_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -85,11 +86,15 @@ class SingleDashBoard extends StatelessWidget {
         children: <Widget>[
           FutureBuilder<DashboardMosqueModel>(
             future: get(
-                '/timings/1398332113?latitude=${lat}&longitude=${long}&method=2'),
+                '/timings/1398332113?latitude=${51.508515}&longitude=${-0.1254872}&method=2'),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 for (var i = 0; i < snapshot.data.prayerTimes.length; i++) {
                   PrayerTime prayer = snapshot.data.prayerTimes[i];
+
+                  var formatter = new DateFormat('Hms');
+                  String formatted = formatter.format(prayer.prayerTime);
+                  String formatted1 = formatter.format(DateTime.now());
                   if (prayer.prayerTime.isAfter(DateTime.now())) {
                     return new DashboardHeader(
                         headerImageSrc: headerImageSrc,
@@ -97,13 +102,23 @@ class SingleDashBoard extends StatelessWidget {
                         prayer: prayer);
                   }
                 }
-                return Text(snapshot.data.prayerTimes.toString());
+                var formatter = new DateFormat('Hms');
+                String formatted =
+                    formatter.format(snapshot.data.prayerTimes[0].prayerTime);
+                return Text("Fajr: $formatted");
               } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
+                return new DashboardHeader(
+                    headerImageSrc: headerImageSrc,
+                    headerText: headerText,
+                    prayer: null);
+                // return Text("${snapshot.error}");
               }
 
               // By default, show a loading spinner
-              return CircularProgressIndicator();
+              return new DashboardHeader(
+                    headerImageSrc: headerImageSrc,
+                    headerText: headerText,
+                    prayer: null);
             },
           ),
           GridView(

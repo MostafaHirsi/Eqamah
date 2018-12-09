@@ -41,9 +41,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<!-- <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Using location when in usage to display on a map</string> -->
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Using location to display on a map</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-    <string>Using location to display on a map</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>

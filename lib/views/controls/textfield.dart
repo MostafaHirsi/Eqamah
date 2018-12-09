@@ -24,30 +24,28 @@ class StandardTextField extends StatelessWidget {
           shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.all(Radius.circular(10.0)),
           )),
-      padding: EdgeInsets.fromLTRB(12.0, 3.0, 0.0, 2.0),
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
       margin: EdgeInsets.fromLTRB(0.0, 25.0, 0.0, 25.0),
       height: 45.0,
       child: TextFormField(
         obscureText: obscureText,
         decoration: InputDecoration(
-          helperText: "ASFASFS",
           border: InputBorder.none,
           hintStyle: TextStyle(color: Colors.white70),
           icon: icon,
           errorStyle: TextStyle(color: Colors.white, fontSize: 17.0),
-          errorText: errorText,
         ),
         style: TextStyle(height: 1.0, fontSize: 19.0),
         validator: (value) {
           if (value.isEmpty) {
-            return errorText;
+            return errorText + "   ";
           }
           return "";
         },
         autovalidate: true,
+        textAlign: TextAlign.center,
         controller: controller,
       ),
-      width: 250.0,
     );
   }
 }
