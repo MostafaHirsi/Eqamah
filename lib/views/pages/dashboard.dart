@@ -89,36 +89,41 @@ class SingleDashBoard extends StatelessWidget {
                 '/timings/1398332113?latitude=${51.508515}&longitude=${-0.1254872}&method=2'),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                for (var i = 0; i < snapshot.data.prayerTimes.length; i++) {
-                  PrayerTime prayer = snapshot.data.prayerTimes[i];
+                // for (var i = 0; i < snapshot.data.prayerTimes.length; i++) {
+                //   PrayerTime prayer = snapshot.data.prayerTimes[i];
 
-                  var formatter = new DateFormat('Hms');
-                  String formatted = formatter.format(prayer.prayerTime);
-                  String formatted1 = formatter.format(DateTime.now());
-                  if (prayer.prayerTime.isAfter(DateTime.now())) {
-                    return new DashboardHeader(
-                        headerImageSrc: headerImageSrc,
-                        headerText: headerText,
-                        prayer: prayer);
-                  }
-                }
+                //   var formatter = new DateFormat('Hms');
+                //   String formatted = formatter.format(prayer.prayerTime);
+                //   String formatted1 = formatter.format(DateTime.now());
+                //   if (prayer.prayerTime.isAfter(DateTime.now())) {
+                //     return new DashboardHeader(
+                //         headerImageSrc: headerImageSrc,
+                //         headerText: headerText,
+                //         prayer: prayer);
+                //   }
+                // }
+
                 var formatter = new DateFormat('Hms');
-                String formatted =
-                    formatter.format(snapshot.data.prayerTimes[0].prayerTime);
-                return Text("Fajr: $formatted");
+                
+                //String formatted =
+                    //formatter.format(snapshot.data.prayerTimes[0].prayerTime);
+                return new DashboardHeader(
+                    headerImageSrc: headerImageSrc,
+                    headerText: headerText,
+                    prayer: snapshot.data.prayerTimes[0], prayers: snapshot.data.prayerTimes,);
               } else if (snapshot.hasError) {
                 return new DashboardHeader(
                     headerImageSrc: headerImageSrc,
                     headerText: headerText,
-                    prayer: null);
+                    prayer: null, prayers: [],);
                 // return Text("${snapshot.error}");
               }
 
               // By default, show a loading spinner
               return new DashboardHeader(
-                    headerImageSrc: headerImageSrc,
-                    headerText: headerText,
-                    prayer: null);
+                  headerImageSrc: headerImageSrc,
+                  headerText: headerText,
+                  prayer: null, prayers: [],);
             },
           ),
           GridView(

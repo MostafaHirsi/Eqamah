@@ -1,6 +1,6 @@
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:eqamah/models/dashboard/mosque_model.dart';
+import 'package:eqamah/views/pages/prayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -10,103 +10,108 @@ class DashboardHeader extends StatelessWidget {
       {Key key,
       @required this.headerImageSrc,
       @required this.headerText,
-      @required this.prayer})
+      @required this.prayer,
+      @required this.prayers})
       : super(key: key);
 
   final String headerImageSrc;
   final String headerText;
   final PrayerTime prayer;
+  final List<PrayerTime> prayers;
 
   @override
   Widget build(BuildContext context) {
-    var formatter = new DateFormat('Hm');
-    String formatted = formatter.format(prayer?.prayerTime) ?? formatter.format(DateTime.now());
     return new Stack(
       children: <Widget>[
         new Container(
-          foregroundDecoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                  colors: [
-                Colors.black38,
-                Colors.black38,
-                Colors.black38,
-                Colors.black38,
-              ],
-                  stops: [
-                0.0,
-                0.00,
-                0.0,
-                5.0
-              ],
-                  begin: FractionalOffset.bottomCenter,
-                  end: FractionalOffset.topCenter,
-                  tileMode: TileMode.repeated)),
-          child: new SizedBox(
-              height: 250.0,
-              child: new Carousel(
-                overlayShadow: false,
-                dotSize: 4.0,
-                dotBgColor: Colors.transparent,
-                autoplay: false,
-                images: [
-                  new ExactAssetImage(headerImageSrc),
-                  new ExactAssetImage('graphics/kaba.jpg'),
-                  new ExactAssetImage('graphics/mosque_night.jpg'),
-                ],
-              )),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                foregroundDecoration: new BoxDecoration(
+                    gradient: new LinearGradient(
+                        colors: [
+                      Colors.black38,
+                      Colors.black38,
+                      Colors.black38,
+                      Colors.black38,
+                    ],
+                        stops: [
+                      0.0,
+                      0.00,
+                      0.0,
+                      5.0
+                    ],
+                        begin: FractionalOffset.bottomCenter,
+                        end: FractionalOffset.topCenter,
+                        tileMode: TileMode.repeated)),
+                child: new SizedBox(
+                  height: 250.0,
+                  // child: new Carousel(
+                  //   overlayShadow: false,
+                  //   dotSize: 4.0,
+                  //   dotBgColor: Colors.transparent,
+                  //   autoplay: false,
+                  //   images: [
+                  //     new ExactAssetImage(headerImageSrc),
+                  //     new ExactAssetImage('graphics/kaba.jpg'),
+                  //     new ExactAssetImage('graphics/mosque_night.jpg'),
+                  //   ],
+                  // )
+                  child: Image.asset(headerImageSrc),
+                ),
+              ),
+              Container(
+                height: 250.0,
+                child: PageView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: prayers.length,
+                  itemBuilder: (context, index) {
+                    return buildPrayer(prayers[index], context);
+                  },
+                ),
+              )
+            ],
+          ),
           alignment: Alignment(-0.9, 1.0),
         ),
-        // Container(
-        //   constraints: BoxConstraints.expand(height: 250.0, width: 500.0),
-        //   alignment: Alignment(-1.0, 1.0),
-        //   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 13.0),
-        //   child: new Text(
-        //     headerText,
-        //     style: TextStyle(
-        //       fontSize: 18.1,
-        //       color: Colors.white,
-        //       fontWeight: FontWeight.bold,
-        //     ),
-        //     maxLines: 2,
-        //     overflow: TextOverflow.ellipsis,
-        //     softWrap: true,
-        //     textAlign: TextAlign.end,
-        //   ),
-        // ),
-        // Container(
-        //   constraints: BoxConstraints.expand(height: 250.0, width: 500.0),
-        //   alignment: Alignment(0.0, 0.0),
-        //   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 15.0),
-        //   child: new Text(
-        //     formatted,
-        //     style: TextStyle(
-        //       fontSize: 35.0,
-        //       color: Colors.white,
-        //       fontWeight: FontWeight.bold,
-        //     ),
-        //     maxLines: 2,
-        //     overflow: TextOverflow.ellipsis,
-        //     softWrap: true,
-        //     textAlign: TextAlign.center,
-        //   ),
-        // ),
-        // Container(
-        //   constraints: BoxConstraints.expand(height: 250.0, width: 500.0),
-        //   alignment: Alignment(0.0, 0.45),
-        //   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 15.0),
-        //   child: new Text(
-        //     prayer.prayerName,
-        //     style: TextStyle(
-        //         fontSize: 25.0,
-        //         color: Colors.white,
-        //         fontWeight: FontWeight.bold),
-        //     maxLines: 2,
-        //     overflow: TextOverflow.ellipsis,
-        //     softWrap: true,
-        //     textAlign: TextAlign.center,
-        //   ),
-        // )
       ],
+    );
+  }
+
+  Container buildContainer(String formatted) {
+    return Container(
+        alignment: Alignment(0.0, 0.0),
+        height: 250.0,
+        child: formatted != ""
+            ? Text("${prayer.prayerName}: $formatted",
+                style: TextStyle(color: Colors.white, fontSize: 30.0))
+            : new CircularProgressIndicator(
+                backgroundColor: Colors.transparent,
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+              ));
+  }
+
+  Widget buildPrayer(PrayerTime prayTimeObj, BuildContext context) {
+    var formatter = new DateFormat('Hm');
+    return InkWell(
+      splashColor: Colors.white,
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) {
+          return PrayerTimePage(prayers: prayers, key: key);
+        }));
+      },
+      child: Container(
+          width: 80.0,
+          alignment: Alignment(0.0, 0.0),
+          height: 250.0,
+          child: prayTimeObj != null
+              ? Text(
+                  "${prayTimeObj.prayerName}: ${formatter.format(prayTimeObj.prayerTime)}",
+                  style: TextStyle(color: Colors.white, fontSize: 30.0))
+              : new CircularProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                )),
     );
   }
 }
