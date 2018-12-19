@@ -33,7 +33,7 @@ class DashboardDrawer extends StatelessWidget {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (BuildContext buildcontext) => new MapsDemo()));
+              builder: (BuildContext buildcontext) => new MapsPage()));
     };
     drawerItems.add(new DrawerItem(
         icon: Icons.people, tileTitle: "Profile", onTap: profileTap));

@@ -7,10 +7,12 @@ class DashboardCard extends StatelessWidget {
     Key key,
     @required this.imageSrc,
     @required this.cardTitle,
+    @required this.pageToNavigate,
   }) : super(key: key);
 
   final String imageSrc;
   final String cardTitle;
+  final Widget pageToNavigate;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,8 @@ class DashboardCard extends StatelessWidget {
         elevation: 10.0,
         child: InkWell(
           onTap: () {
-            // Navigator.pushReplacement(
-            //     context, MaterialPageRoute(builder: (context) => MapViewPage()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => pageToNavigate));
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

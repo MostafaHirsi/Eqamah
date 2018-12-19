@@ -21,6 +21,7 @@ class DashboardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PageController _pageController = PageController();
     return new Stack(
       children: <Widget>[
         new Container(
@@ -46,30 +47,51 @@ class DashboardHeader extends StatelessWidget {
                         tileMode: TileMode.repeated)),
                 child: new SizedBox(
                   height: 250.0,
-                  // child: new Carousel(
-                  //   overlayShadow: false,
-                  //   dotSize: 4.0,
-                  //   dotBgColor: Colors.transparent,
-                  //   autoplay: false,
-                  //   images: [
-                  //     new ExactAssetImage(headerImageSrc),
-                  //     new ExactAssetImage('graphics/kaba.jpg'),
-                  //     new ExactAssetImage('graphics/mosque_night.jpg'),
-                  //   ],
-                  // )
                   child: Image.asset(headerImageSrc),
                 ),
               ),
               Container(
                 height: 250.0,
                 child: PageView.builder(
+                  controller: _pageController,
                   scrollDirection: Axis.horizontal,
                   itemCount: prayers.length,
                   itemBuilder: (context, index) {
-                    return buildPrayer(prayers[index], context);
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Opacity(
+                          opacity: _pageController.page > 0 ? 1.0 : 0.0,
+                          child: IconButton(
+                            color: Colors.white,
+                            icon: Icon(Icons.arrow_left),
+                            onPressed: () {
+                              _pageController.previousPage(
+                                  curve: Curves.bounceOut,
+                                  duration: Duration(milliseconds: 500));
+                            },
+                          ),
+                        ),
+                        buildPrayer(prayers[index], context),
+                        Opacity(
+                          opacity: _pageController.page < prayers.length - 1
+                              ? 1.0
+                              : 0.0,
+                          child: IconButton(
+                            color: Colors.white,
+                            icon: Icon(Icons.arrow_right),
+                            onPressed: () {
+                              _pageController.nextPage(
+                                  curve: Curves.bounceOut,
+                                  duration: Duration(milliseconds: 500));
+                            },
+                          ),
+                        )
+                      ],
+                    );
                   },
                 ),
-              )
+              ),
             ],
           ),
           alignment: Alignment(-0.9, 1.0),
@@ -92,7 +114,7 @@ class DashboardHeader extends StatelessWidget {
   }
 
   Widget buildPrayer(PrayerTime prayTimeObj, BuildContext context) {
-    var formatter = new DateFormat('Hm');
+    var formatter = new DateFormat().add_jm();
     return InkWell(
       splashColor: Colors.white,
       onTap: () {
@@ -101,13 +123,15 @@ class DashboardHeader extends StatelessWidget {
         }));
       },
       child: Container(
-          width: 80.0,
+          width: 180.0,
           alignment: Alignment(0.0, 0.0),
           height: 250.0,
           child: prayTimeObj != null
               ? Text(
-                  "${prayTimeObj.prayerName}: ${formatter.format(prayTimeObj.prayerTime)}",
-                  style: TextStyle(color: Colors.white, fontSize: 30.0))
+                  "${prayTimeObj.prayerName} \n ${formatter.format(prayTimeObj.prayerTime)}",
+                  style: TextStyle(color: Colors.white, fontSize: 30.0),
+                  textAlign: TextAlign.center,
+                )
               : new CircularProgressIndicator(
                   backgroundColor: Colors.transparent,
                   valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),

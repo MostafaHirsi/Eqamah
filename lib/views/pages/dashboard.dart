@@ -4,6 +4,8 @@ import 'package:eqamah/models/dashboard/mosque_model.dart';
 import 'package:eqamah/views/controls/dashboard/dashboard_card.dart';
 import 'package:eqamah/views/controls/dashboard/dashboard_drawer.dart';
 import 'package:eqamah/views/controls/dashboard/dashboard_header.dart';
+import 'package:eqamah/views/pages/demo_map.dart';
+import 'package:eqamah/views/pages/information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -80,62 +82,50 @@ class SingleDashBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double lat, long;
+    var location = new Location();
+    Future<Map<String, double>> currentLocation = location.getLocation();
+    currentLocation.then((obj) {
+      lat = obj["latitude"];
+      long = obj["longitude"];
+    });
+
+    Future<DashboardMosqueModel> future = location.getLocation().then((obj) {
+      lat = obj["latitude"];
+      long = obj["longitude"];
+      return getPrayerTimes(
+          '/timings?latitude=${lat.toStringAsPrecision(7)}&longitude=${long.toStringAsPrecision(7)}&method=2&timezonestring=Europe/London');
+    });
     return Container(
       constraints: BoxConstraints.expand(),
       child: Column(
         children: <Widget>[
           FutureBuilder<DashboardMosqueModel>(
-            future: get(
-                '/timings/1398332113?latitude=${51.508515}&longitude=${-0.1254872}&method=2'),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                // for (var i = 0; i < snapshot.data.prayerTimes.length; i++) {
-                //   PrayerTime prayer = snapshot.data.prayerTimes[i];
-
-                //   var formatter = new DateFormat('Hms');
-                //   String formatted = formatter.format(prayer.prayerTime);
-                //   String formatted1 = formatter.format(DateTime.now());
-                //   if (prayer.prayerTime.isAfter(DateTime.now())) {
-                //     return new DashboardHeader(
-                //         headerImageSrc: headerImageSrc,
-                //         headerText: headerText,
-                //         prayer: prayer);
-                //   }
-                // }
-
-                var formatter = new DateFormat('Hms');
-                
-                //String formatted =
-                    //formatter.format(snapshot.data.prayerTimes[0].prayerTime);
-                return new DashboardHeader(
-                    headerImageSrc: headerImageSrc,
-                    headerText: headerText,
-                    prayer: snapshot.data.prayerTimes[0], prayers: snapshot.data.prayerTimes,);
-              } else if (snapshot.hasError) {
-                return new DashboardHeader(
-                    headerImageSrc: headerImageSrc,
-                    headerText: headerText,
-                    prayer: null, prayers: [],);
-                // return Text("${snapshot.error}");
-              }
-
-              // By default, show a loading spinner
-              return new DashboardHeader(
-                  headerImageSrc: headerImageSrc,
-                  headerText: headerText,
-                  prayer: null, prayers: [],);
-            },
-          ),
+              future: future, builder: buildFutureBuilder),
           GridView(
             padding: EdgeInsets.all(5.0),
             shrinkWrap: true,
             children: <Widget>[
               new DashboardCard(
-                  imageSrc: 'graphics/contacts.png', cardTitle: 'Contacts'),
+                imageSrc: 'graphics/event.png',
+                cardTitle: 'Events',
+                pageToNavigate: MapsPage(),
+              ),
               new DashboardCard(
-                  imageSrc: 'graphics/event.png', cardTitle: 'Events'),
+                imageSrc: 'graphics/event.png',
+                cardTitle: 'Information',
+                pageToNavigate: MosqueInformationPage(),
+              ),
               new DashboardCard(
-                  imageSrc: 'graphics/time_icon.png', cardTitle: 'Salat Times')
+                imageSrc: 'graphics/event.png',
+                cardTitle: 'Current Mosques',
+                pageToNavigate: MapsPage(),
+              ),
+              new DashboardCard(
+                imageSrc: 'graphics/event.png',
+                cardTitle: 'Explore',
+                pageToNavigate: MapsPage(),
+              ),
             ],
             gridDelegate:
                 SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
@@ -144,6 +134,30 @@ class SingleDashBoard extends StatelessWidget {
       ),
     );
   }
-}
 
-//AIzaSyDoEMHqWxH625fr45zJDioOflyHWf1soBI
+  Widget buildFutureBuilder(context, snapshot) {
+    if (snapshot.hasData) {
+      return new DashboardHeader(
+        headerImageSrc: headerImageSrc,
+        headerText: headerText,
+        prayer: snapshot.data.prayerTimes[0],
+        prayers: snapshot.data.prayerTimes,
+      );
+    } else if (snapshot.hasError) {
+      return new DashboardHeader(
+        headerImageSrc: headerImageSrc,
+        headerText: headerText,
+        prayer: null,
+        prayers: [],
+      );
+    }
+
+    // By default, show a loading spinner
+    return new DashboardHeader(
+      headerImageSrc: headerImageSrc,
+      headerText: headerText,
+      prayer: null,
+      prayers: [],
+    );
+  }
+}

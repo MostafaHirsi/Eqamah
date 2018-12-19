@@ -23,8 +23,8 @@ class DashboardMosqueModel {
     int minutes = int.parse(val.split(":")[1]);
     return new PrayerTime(
         prayerName: key,
-        prayerTime: new DateTime(
-            todayDate.year, todayDate.month, todayDate.day, hours, minutes));
+        prayerTime: new DateTime.utc(
+            todayDate.year, todayDate.month, todayDate.day, hours, minutes,));
   }
 }
 

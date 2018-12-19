@@ -7,12 +7,12 @@ import 'dart:math' as Math;
 
 import 'package:http/http.dart';
 
-class MapsDemo extends StatefulWidget {
+class MapsPage extends StatefulWidget {
   @override
-  State createState() => MapsDemoState();
+  State createState() => MapsPageState();
 }
 
-class MapsDemoState extends State<MapsDemo> {
+class MapsPageState extends State<MapsPage> {
   GoogleMapController mapController;
   String searchTerms = "";
   TextEditingController searchController = new TextEditingController();
