@@ -9,4 +9,3 @@ Future<DashboardMosqueModel> getPrayerTimes(String params) async {
   return DashboardMosqueModel.fromJson(json.decode(response.body));
 }
 
-//latitude=51.508515&longitude=-0.1254872&method=2&month=4&year=2017
