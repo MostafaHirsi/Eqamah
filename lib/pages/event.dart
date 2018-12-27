@@ -1,4 +1,4 @@
-import 'package:eqamah/views/pages/eventDetail.dart';
+import 'package:eqamah/pages/eventDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
