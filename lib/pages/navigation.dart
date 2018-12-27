@@ -26,14 +26,7 @@ class _NavigationPageState extends State<NavigationPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              FontAwesomeIcons.mosque,
-            ),
-            onPressed: () {},
-          )
-        ],
+        actions: buildActions(),
       ),
       backgroundColor: Theme.of(context).primaryColor,
       body: pages[tabIndex],
@@ -54,6 +47,17 @@ class _NavigationPageState extends State<NavigationPage> {
         ],
       ),
     );
+  }
+
+  List<Widget> buildActions() {
+    return <Widget>[
+        tabIndex != 2 ?  IconButton(
+          icon: Icon(
+            FontAwesomeIcons.mosque,
+          ),
+          onPressed: () {},
+        ) : Container()
+      ];
   }
 
   BottomNavigationBarItem buildBottomNavigationBarItem(
