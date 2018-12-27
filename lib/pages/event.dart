@@ -19,7 +19,7 @@ class _EventPageState extends State<EventPage> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        title: Text("Events"),
+       
         actions: <Widget>[
            new IconButton(
              icon: new Icon(Icons.tune),
@@ -28,7 +28,7 @@ class _EventPageState extends State<EventPage> {
          ],
          
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.white,
       body:ListView.builder(itemBuilder: buildEventItem, itemCount: eventItems.length,)
     );
   }
