@@ -28,6 +28,10 @@ dependencies:
   google_maps_webservice: ^0.0.9
   cached_network_image: ^0.5.1
   font_awesome_flutter: ^8.2.0 
+  rxdart: ^0.18.0
+
+
+
 
 dev_dependencies:
   flutter_test:

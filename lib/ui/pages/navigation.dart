@@ -1,7 +1,7 @@
-import 'package:eqamah/pages/event.dart';
-import 'package:eqamah/pages/home.dart';
-import 'package:eqamah/pages/info.dart';
-import 'package:eqamah/pages/settings.dart';
+import 'package:eqamah/ui/pages/event.dart';
+import 'package:eqamah/ui/pages/home.dart';
+import 'package:eqamah/ui/pages/info.dart';
+import 'package:eqamah/ui/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -31,8 +31,7 @@ class _NavigationPageState extends State<NavigationPage> {
       backgroundColor: Theme.of(context).primaryColor,
       body: pages[tabIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        fixedColor: Theme.of(context).primaryColor,
+        type: BottomNavigationBarType.shifting,
         onTap: (tappedIndex) {
           setState(() {
             tabIndex = tappedIndex;
@@ -61,13 +60,24 @@ class _NavigationPageState extends State<NavigationPage> {
     //   }
     // }
     return <Widget>[
-        tabIndex != 2 ?  IconButton(
-          icon: Icon(
-            FontAwesomeIcons.mosque,
-          ),
-          onPressed: () {},
-        ) : Container()
-      ];
+      tabIndex == 0 || tabIndex == 3
+          ? IconButton(
+              icon: Icon(
+                FontAwesomeIcons.mosque,
+              ),
+              onPressed: () {},
+            )
+          : Container(),
+      tabIndex == 1
+          ? IconButton(
+              icon: Icon(
+                Icons.tune,
+                size: 30.0,
+              ),
+              onPressed: () {},
+            )
+          : Container()
+    ];
   }
 
   BottomNavigationBarItem buildBottomNavigationBarItem(
@@ -81,11 +91,13 @@ class _NavigationPageState extends State<NavigationPage> {
           children: <Widget>[
             Icon(
               icon,
-              color: Color(0xFF009000),
+              color: Colors.white,
             ),
             Text(
               label,
-              style: TextStyle(color: Color(0xFF009000)),
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ],
         ),
@@ -96,7 +108,7 @@ class _NavigationPageState extends State<NavigationPage> {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: Color(0xFF009000),
+              color: Colors.white,
             ),
           ),
         ),
@@ -104,11 +116,13 @@ class _NavigationPageState extends State<NavigationPage> {
           children: <Widget>[
             Icon(
               icon,
-              color: Color(0xFF009000),
+              color: Colors.white,
             ),
             Text(
               label,
-              style: TextStyle(color: Color(0xFF009000)),
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ],
         ),
