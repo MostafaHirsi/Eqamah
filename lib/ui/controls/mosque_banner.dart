@@ -27,7 +27,7 @@ class MosqueBanner extends StatelessWidget {
             imageUrl:
                 "https://i2-prod.birminghammail.co.uk/incoming/article7775520.ece/ALTERNATES/s615/green-lane-mosque.jpg",
             placeholder: Container(
-              height: 150.0,
+              height: 300.0,
               alignment: FractionalOffset.center,
               child: Container(
                 child: new CircularProgressIndicator(),

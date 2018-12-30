@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eqamah/controls/mosque_banner.dart';
+import 'package:eqamah/ui/controls/mosque_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -25,6 +25,7 @@ class _InformationPageState extends State<InformationPage> {
             margin: EdgeInsets.only(left: 20.0, top: 20.0),
             child: Text(
               "Services",
+              style: TextStyle(color: Colors.black),
             ),
           ),
         )

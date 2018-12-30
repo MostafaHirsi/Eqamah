@@ -1,15 +1,15 @@
 class DashboardMosqueModel {
   final String mosqueName;
 
-  final List<PrayerTime> prayerTimes;
+  final List<PrayerModel> prayerTimes;
 
   DashboardMosqueModel({this.mosqueName, this.prayerTimes});
 
   factory DashboardMosqueModel.fromJson(Map<String, dynamic> json) {
     var data = json["data"]["timings"];
-    List<PrayerTime> _prayerTimes = [];
+    List<PrayerModel> _prayerTimes = [];
     data.forEach((key, value) {
-      PrayerTime g = parseTime(key, value);
+      PrayerModel g = parseTime(key, value);
       _prayerTimes.add(g);
     });
     return DashboardMosqueModel(
@@ -21,20 +21,20 @@ class DashboardMosqueModel {
     DateTime todayDate = DateTime.now();
     int hours = int.parse(val.split(":")[0]);
     int minutes = int.parse(val.split(":")[1]);
-    return new PrayerTime(
+    return new PrayerModel(
         prayerName: key,
         prayerTime: new DateTime.utc(
             todayDate.year, todayDate.month, todayDate.day, hours, minutes,));
   }
 }
 
-class PrayerTime {
+class PrayerModel {
   final DateTime prayerTime;
   final String prayerName;
 
-  PrayerTime({this.prayerName, this.prayerTime});
+  PrayerModel({this.prayerName, this.prayerTime});
 
-  factory PrayerTime.fromJson(Map<String, dynamic> json) {
-    return PrayerTime();
+  factory PrayerModel.fromJson(Map<String, dynamic> json) {
+    return PrayerModel();
   }
 }
