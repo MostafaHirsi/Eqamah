@@ -17,9 +17,6 @@ class _MosqueEventDetailPageState extends State<MosqueEventDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(eventListName),
-      ),
       body: Flex(
   
         direction: Axis.vertical,

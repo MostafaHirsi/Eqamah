@@ -50,6 +50,16 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   List<Widget> buildActions() {
+    // switch(){
+    //   case "Home":
+       
+    //   break;
+    //   case 2:
+    //   break;
+    //   case 3:
+    //   break;
+    //   }
+    // }
     return <Widget>[
         tabIndex != 2 ?  IconButton(
           icon: Icon(

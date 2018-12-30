@@ -16,18 +16,7 @@ class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-       
-        actions: <Widget>[
-           new IconButton(
-             icon: new Icon(Icons.tune),
-            onPressed: () => Navigator.of(context).pop(null),
-           ),
-         ],
-         
-      ),
+     
       backgroundColor: Colors.white,
       body:ListView.builder(itemBuilder: buildEventItem, itemCount: eventItems.length,)
     );
@@ -58,7 +47,7 @@ class EventItem extends StatelessWidget {
           decoration: new BoxDecoration(
               border: new Border(
                   right: new BorderSide(width: 1.0, color: Colors.grey))),
-          child: Icon(Icons.calendar_today, color: Colors.black),
+          child: Icon(Icons.lens, color: Colors.black),
 
         ),
       title: Text(eventListName),
