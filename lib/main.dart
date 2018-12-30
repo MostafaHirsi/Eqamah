@@ -1,4 +1,4 @@
-import 'package:eqamah/pages/navigation.dart';
+import 'package:eqamah/ui/pages/navigation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,10 +13,19 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: new ThemeData(
         primarySwatch: Colors.green,
-        primaryColor: Colors.white,
+        primaryColor: Colors.blueGrey,
         iconTheme: IconThemeData(
-          color: Color(0xFF009000),
+          color: Colors.white,
         ),
+        textTheme: TextTheme(
+          body1: TextStyle(color: Colors.white),
+          body2: TextStyle(color: Colors.white),
+          title: TextStyle(color: Colors.white),
+        ),
+        primaryIconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        primaryTextTheme: TextTheme(),
       ),
       home: new NavigationPage(),
       debugShowCheckedModeBanner: false,
