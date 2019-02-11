@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String url = "https://hdqwalls.com/download/mosque-ap-1125x2436.jpg";
-
+  List<PrayerModel> todaysPrayers = null;
   @override
   Widget build(BuildContext context) {
     prayerTimeBloc.fetchAllPrayers();
@@ -50,6 +50,8 @@ class _HomePageState extends State<HomePage> {
                   DashboardMosqueModel dashboardMosqueModel = snapshot.data;
                   PrayerModel prayerTime =
                       getClosestPrayer(dashboardMosqueModel);
+                  todaysPrayers = dashboardMosqueModel.prayerTimes;
+
                   var formatter = new DateFormat('HH:mm');
                   return Column(
                     children: <Widget>[
@@ -67,6 +69,20 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(fontSize: 26.0),
                         textAlign: TextAlign.center,
                       ),
+                      RaisedButton(
+                        color: Colors.white,
+                        child: Text(
+                          "View All",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => PrayersFullScreen(
+                                      prayers: todaysPrayers)));
+                        },
+                      )
                     ],
                   );
                 } else if (snapshot.hasError) {
@@ -76,16 +92,6 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-          RaisedButton(
-            color: Colors.white,
-            child: Text(
-              "View All",
-              style: TextStyle(color: Colors.black),
-            ),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => PrayersFullScreen()));
-            },
-          )
         ],
       ),
     );

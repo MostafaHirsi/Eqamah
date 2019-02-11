@@ -1,4 +1,4 @@
-import 'package:eqamah/pages/eventDetail.dart';
+import 'package:eqamah/ui/pages/eventDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -53,7 +53,7 @@ class EventItem extends StatelessWidget {
       title: Text(eventListName),
        subtitle: Row(
           children: <Widget>[
-            Text(" Place holder Text", style: TextStyle(color: Colors.black))
+            Text("Place hold", style: TextStyle(color: Colors.black))
           ],
         ),
           trailing:

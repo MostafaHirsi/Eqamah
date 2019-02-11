@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class MosqueBanner extends StatelessWidget {
+  final String bannerTitle;
+  final String bannerImg;
   const MosqueBanner({
     Key key,
+    this.bannerTitle,
+    this.bannerImg,
   }) : super(key: key);
 
   @override
@@ -25,7 +29,7 @@ class MosqueBanner extends StatelessWidget {
           ),
           child: new CachedNetworkImage(
             imageUrl:
-                "https://i2-prod.birminghammail.co.uk/incoming/article7775520.ece/ALTERNATES/s615/green-lane-mosque.jpg",
+              bannerImg,
             placeholder: Container(
               height: 300.0,
               alignment: FractionalOffset.center,
@@ -43,7 +47,7 @@ class MosqueBanner extends StatelessWidget {
             horizontal: 10.0,
           ),
           child: Text(
-            "Green Lane Masjid",
+            bannerTitle,
             style: TextStyle(color: Colors.white, fontSize: 22.0),
           ),
         )
