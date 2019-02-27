@@ -8,6 +8,8 @@ class PrayerTimeBloc {
   final _prayerTimeRepository = PrayerTimeRepository();
   final _prayerTimeFetcher = PublishSubject<DashboardMosqueModel>();
 
+  DashboardMosqueModel mosqueModel;
+
   Observable<DashboardMosqueModel> get allPrayers => _prayerTimeFetcher.stream;
 
   fetchAllPrayers() async {

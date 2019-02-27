@@ -39,7 +39,7 @@ class MosqueBanner extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.symmetric(
-            vertical: 10.0,
+            vertical: 40.0,
             horizontal: 10.0,
           ),
           child: Text(
