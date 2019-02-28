@@ -11,6 +11,28 @@ class PrayersFullScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          //title: Text(eventListName),
+          actions: <Widget>[
+            Theme(
+              data: ThemeData(primaryColor: Colors.blueGrey, primarySwatch: Colors.blueGrey),
+              child: new Builder(builder: (contextOne) => IconButton(
+                icon: Icon(
+                  Icons.calendar_today,
+                  size: 25.0,
+                  color: Colors.white,
+                ),
+                onPressed: () async {
+                  DateTime daySelected = await showDatePicker(
+                      firstDate: DateTime.now(),
+                      initialDate: DateTime.now(),
+                      lastDate: DateTime.now().add(Duration(days: 31)),
+                      context: contextOne);
+                },
+              ),)
+            )
+          ],
+        ),
         backgroundColor: Colors.white,
         body: ListView.builder(
             itemBuilder: buildPrayerItem, itemCount: prayers.length)
@@ -74,7 +96,6 @@ class PrayersFullScreen extends StatelessWidget {
 }
 
 class PrayerItem extends StatelessWidget {
-  
   final PrayerModel prayer;
   const PrayerItem({this.prayer}) : super();
 
@@ -82,13 +103,21 @@ class PrayerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     var formatter = new DateFormat('HH:mm');
     return Container(
-      height: 60,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-                Container(child: Text(prayer.prayerName, style: TextStyle(color: Colors.black),)),
-                Container(child: Text(formatter.format(prayer.prayerTime), style: TextStyle(color: Colors.black),)),
-      ],
-    ));
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+                child: Text(
+              prayer.prayerName,
+              style: TextStyle(color: Colors.black),
+            )),
+            Container(
+                child: Text(
+              formatter.format(prayer.prayerTime),
+              style: TextStyle(color: Colors.black),
+            )),
+          ],
+        ));
   }
 }
