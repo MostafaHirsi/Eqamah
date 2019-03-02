@@ -1,6 +1,7 @@
 import 'package:eqamah/ui/pages/event.dart';
 import 'package:eqamah/ui/pages/home.dart';
 import 'package:eqamah/ui/pages/info.dart';
+import 'package:eqamah/ui/pages/mosques.dart';
 import 'package:eqamah/ui/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -64,8 +65,14 @@ class _NavigationPageState extends State<NavigationPage> {
           ? IconButton(
               icon: Icon(
                 FontAwesomeIcons.mosque,
+                
               ),
-              onPressed: () {},
+               onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => MosquesPage()));
+                        },
             )
           : Container(),
       tabIndex == 1
