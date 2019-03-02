@@ -17,15 +17,17 @@ class _MosquesPageState extends State<MosquesPage> {
         child: Center(
           child: Column(
             children: <Widget>[
+              // Flexible(
+              //   flex: 50,
+              //   child: Container(
+              //     color: Colors.black,
+              //   ),
+              // ),
               Flexible(
                 flex: 50,
-              child: Container(
-                color: Colors.black,
-              ),
-              ),
-              Flexible(
-                 flex: 50,
-              child: Container(child: MapsPage(),),
+                child: Container(
+                  child: MapsPage(),
+                ),
               ),
             ],
           ),

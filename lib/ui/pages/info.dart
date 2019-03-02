@@ -19,7 +19,11 @@ class _InformationPageState extends State<InformationPage> {
       children: <Widget>[
         Flexible(
           flex: 45,
-          child: new MosqueBanner(),
+          child: new MosqueBanner(
+            bannerImg:
+                'https://i2-prod.birminghammail.co.uk/incoming/article7775520.ece/ALTERNATES/s615/green-lane-mosque.jpg',
+            bannerTitle: "Green Lane Masjid",
+          ),
         ),
         Flexible(
           flex: 55,
