@@ -13,19 +13,19 @@ class MapsPage extends StatefulWidget {
 }
 
 class MapsPageState extends State<MapsPage> {
-  GoogleMapController mapController;
-  String searchTerms = "";
-  TextEditingController searchController = new TextEditingController();
-  final places =
-      new GoogleMapsPlaces("AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg");
-  bool focused = false;
-  double _radius = 800.0;
-  Offset offset = new Offset(0.0, -200.0);
-  PlacesSearchResult _selectedPlace;
+  // GoogleMapController mapController;
+  // String searchTerms = "";
+  // TextEditingController searchController = new TextEditingController();
+  // final places =
+  //     new GoogleMapsPlaces("AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg");
+  // bool focused = false;
+  // double _radius = 800.0;
+  // Offset offset = new Offset(0.0, -200.0);
+  // PlacesSearchResult _selectedPlace;
 
-  bool _isVisible = false;
+  // bool _isVisible = false;
 
-  PlacesSearchResponse _placesSearchResponse;
+  // PlacesSearchResponse _placesSearchResponse;
 
   @override
   void initState() {
@@ -37,112 +37,112 @@ class MapsPageState extends State<MapsPage> {
     return Scaffold(
         body: new Stack(
       children: <Widget>[
-        GoogleMap(
-          onMapCreated: _onMapCreated,
-        ),
-        Container(
-          alignment: Alignment(1.0, -1.0),
-          margin: EdgeInsets.only(top: 10.0),
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: TextField(
-            onTap: () {
-              setState(() {
-                focused = true;
-              });
-            },
-            onSubmitted: searchNearby,
-            autofocus: false,
-            controller: searchController,
-            decoration: new InputDecoration(
-              contentPadding: EdgeInsets.all(15.0),
-              labelText: "Search for a mosque...",
-              suffixIcon: Icon(Icons.search),
-              filled: focused,
-              fillColor: Colors.white,
-              focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Theme.of(context).primaryColor)),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.shade800)),
-            ),
-          ),
-        ),
-        Container(
-          child: MosqueInfoCard(
-            isVisible: _isVisible,
-            selectedPlace: _selectedPlace,
-          ),
-        )
+        // GoogleMap(
+        //   onMapCreated: _onMapCreated,
+        // ),
+        // Container(
+        //   alignment: Alignment(1.0, -1.0),
+        //   margin: EdgeInsets.only(top: 10.0),
+        //   padding: EdgeInsets.symmetric(horizontal: 10.0),
+        //   child: TextField(
+        //     onTap: () {
+        //       setState(() {
+        //         focused = true;
+        //       });
+        //     },
+        //     onSubmitted: searchNearby,
+        //     autofocus: false,
+        //     controller: searchController,
+        //     decoration: new InputDecoration(
+        //       contentPadding: EdgeInsets.all(15.0),
+        //       labelText: "Search for a mosque...",
+        //       suffixIcon: Icon(Icons.search),
+        //       filled: focused,
+        //       fillColor: Colors.white,
+        //       focusedBorder: OutlineInputBorder(
+        //           borderSide:
+        //               BorderSide(color: Theme.of(context).primaryColor)),
+        //       enabledBorder: OutlineInputBorder(
+        //           borderSide: BorderSide(color: Colors.grey.shade800)),
+        //     ),
+        //   ),
+        // ),
+        // Container(
+        //   child: MosqueInfoCard(
+        //     isVisible: _isVisible,
+        //     selectedPlace: _selectedPlace,
+        //   ),
+        // )
       ],
     ));
   }
 
-  void searchNearby(searchTerms) async {
-    mapController.clearMarkers();
-    _placesSearchResponse = await places.searchNearbyWithRadius(
-        Location(52.484277, -1.825472), 1500,
-        keyword: "mosque", name: searchTerms);
-    mapController.animateCamera(CameraUpdate.zoomTo(getZoomLevel(_radius)));
-    populateMarkers(_placesSearchResponse);
-  }
+  // void searchNearby(searchTerms) async {
+  //   mapController.clearMarkers();
+  //   _placesSearchResponse = await places.searchNearbyWithRadius(
+  //       Location(52.484277, -1.825472), 1500,
+  //       keyword: "mosque", name: searchTerms);
+  //   mapController.animateCamera(CameraUpdate.zoomTo(getZoomLevel(_radius)));
+  //   populateMarkers(_placesSearchResponse);
+  // }
 
-  void populateMarkers(PlacesSearchResponse placesSearchResponse) {
-    if (placesSearchResponse.isOkay) {
-      for (PlacesSearchResult searchResult in placesSearchResponse.results) {
-        Location location = searchResult.geometry.location;
-        MarkerOptions markerOptions = new MarkerOptions(
-            position: new LatLng(location.lat, location.lng),
-            icon: BitmapDescriptor.fromAsset("graphics/marker_icon.png"),
-            consumeTapEvents: false);
-        mapController.addMarker(markerOptions);
-      }
-    }
-  }
+  // void populateMarkers(PlacesSearchResponse placesSearchResponse) {
+  //   if (placesSearchResponse.isOkay) {
+  //     for (PlacesSearchResult searchResult in placesSearchResponse.results) {
+  //       Location location = searchResult.geometry.location;
+  //       MarkerOptions markerOptions = new MarkerOptions(
+  //           position: new LatLng(location.lat, location.lng),
+  //           icon: BitmapDescriptor.fromAsset("graphics/marker_icon.png"),
+  //           consumeTapEvents: false);
+  //       mapController.addMarker(markerOptions);
+  //     }
+  //   }
+  // }
 
-  void _onMapCreated(GoogleMapController controller) {
-    setState(() {
-      mapController = controller;
-    });
+  // void _onMapCreated(GoogleMapController controller) {
+  //   setState(() {
+  //     mapController = controller;
+  //   });
 
-    GoogleMapOptions googleMapOptions = new GoogleMapOptions(
-        myLocationEnabled: true,
-        compassEnabled: false,
-        tiltGesturesEnabled: true);
-    mapController.updateMapOptions(googleMapOptions);
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-      const CameraPosition(
-        bearing: 270.0,
-        target: LatLng(52.484277, -1.825472),
-        tilt: 30.0,
-        zoom: 17.0,
-      ),
-    ));
+  //   GoogleMapOptions googleMapOptions = new GoogleMapOptions(
+  //       myLocationEnabled: true,
+  //       compassEnabled: false,
+  //       tiltGesturesEnabled: true);
+  //   mapController.updateMapOptions(googleMapOptions);
+  //   mapController.animateCamera(CameraUpdate.newCameraPosition(
+  //     const CameraPosition(
+  //       bearing: 270.0,
+  //       target: LatLng(52.484277, -1.825472),
+  //       tilt: 30.0,
+  //       zoom: 17.0,
+  //     ),
+  //   ));
 
-    mapController.addListener(() {
-      setState(() {
-        focused = false;
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
-        _isVisible = false;
-      });
-    });
+  //   mapController.addListener(() {
+  //     setState(() {
+  //       focused = false;
+  //       SystemChannels.textInput.invokeMethod('TextInput.hide');
+  //       _isVisible = false;
+  //     });
+  //   });
 
-    mapController.onMarkerTapped.add(markerTapped);
-  }
+  //   mapController.onMarkerTapped.add(markerTapped);
+  // }
 
-  markerTapped(Marker marker) {
-    int index = int.parse(marker.id);
-    setState(() {
-      _selectedPlace = _placesSearchResponse.results[index];
-      _isVisible = true;
-    });
-  }
+  // markerTapped(Marker marker) {
+  //   int index = int.parse(marker.id);
+  //   setState(() {
+  //     _selectedPlace = _placesSearchResponse.results[index];
+  //     _isVisible = true;
+  //   });
+  // }
 
-  double getZoomLevel(double radius) {
-    int zoomLevel = 0;
-    double scale = radius / 500;
-    zoomLevel = (16 - Math.log(scale) / Math.log(2)).toInt();
-    return zoomLevel - 2.0;
-  }
+  // double getZoomLevel(double radius) {
+  //   int zoomLevel = 0;
+  //   double scale = radius / 500;
+  //   zoomLevel = (16 - Math.log(scale) / Math.log(2)).toInt();
+  //   return zoomLevel - 2.0;
+  // }
 }
 
 class MosqueInfoCard extends StatelessWidget {

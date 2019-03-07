@@ -25,9 +25,9 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       
-      appBar: tabIndex != 2  ? AppBar(
+      appBar: tabIndex != 2 && tabIndex !=0  ? AppBar(
         backgroundColor: Colors.transparent,
-        elevation: 0.0,
+        elevation: 0.0, 
         actions: buildActions(),
       ) : null,
       backgroundColor: Theme.of(context).primaryColor,
