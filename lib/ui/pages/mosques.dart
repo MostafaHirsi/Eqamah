@@ -1,4 +1,4 @@
-import 'package:eqamah/ui/pages/demo.dart';
+import 'package:eqamah/ui/controls/demo.dart';
 import 'package:flutter/material.dart';
 
 class MosquesPage extends StatefulWidget {
@@ -11,7 +11,7 @@ class _MosquesPageState extends State<MosquesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('text'),
+        title: Text('Mosques'),
       ),
       body: Container(
         child: Center(

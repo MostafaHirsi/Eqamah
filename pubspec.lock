@@ -199,7 +199,7 @@ packages:
       name: google_maps_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.3+2"
+    version: "0.3.0+2"
   google_maps_webservice:
     dependency: "direct main"
     description:
@@ -536,4 +536,4 @@ packages:
     version: "2.1.15"
 sdks:
   dart: ">=2.1.0 <3.0.0"
-  flutter: ">=0.11.10 <2.0.0"
+  flutter: ">=0.11.9 <2.0.0"
