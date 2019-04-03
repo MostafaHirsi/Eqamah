@@ -16,7 +16,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String url = "https://hdqwalls.com/download/mosque-ap-1125x2436.jpg";
-  List<PrayerModel> todaysPrayers = null;
+  List<PrayerModel> todaysPrayers;
+  String closestPrayer = "";
+  FlareController animationController;
 
   @override
   void initState() {
@@ -26,7 +28,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    prayerTimeBloc.fetchAllPrayers();
+    // prayerTimeBloc.fetchAllPrayers();
+
+  PrayerModel prayerTime =
+      getClosestPrayer(prayerTimeBloc.mosqueModel);
+  
+  todaysPrayers = prayerTimeBloc.mosqueModel.prayerTimes;
+  closestPrayer = prayerTime.prayerName;
+
+  var formatter = new DateFormat('HH:mm');
+
+
+
     return Container(
         // color: Theme.of(context).primaryColor,
         decoration: BoxDecoration(
@@ -43,7 +56,7 @@ class _HomePageState extends State<HomePage> {
             new FlareActor(
               "graphics/prayerAnimations.flr",
               fit: BoxFit.fitWidth,
-              animation: "Isha",
+              animation: closestPrayer,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,19 +88,7 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     margin: EdgeInsets.symmetric(vertical: 0.0),
                     alignment: FractionalOffset.center,
-                    child: StreamBuilder(
-                      stream: prayerTimeBloc.allPrayers,
-                      builder: (context,
-                          AsyncSnapshot<DashboardMosqueModel> snapshot) {
-                        if (snapshot.hasData) {
-                          DashboardMosqueModel dashboardMosqueModel =
-                              snapshot.data;
-                          PrayerModel prayerTime =
-                              getClosestPrayer(dashboardMosqueModel);
-                          todaysPrayers = dashboardMosqueModel.prayerTimes;
-
-                          var formatter = new DateFormat('HH:mm');
-                          return Column(
+                    child: Column(
                             children: <Widget>[
                               Container(
                                 margin: EdgeInsets.symmetric(vertical: 10.0),
@@ -118,13 +119,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                               )
                             ],
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text(snapshot.error.toString());
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      },
-                    ),
+                          ),
                   ),
                 )
               ],
@@ -135,16 +130,34 @@ class _HomePageState extends State<HomePage> {
 
   PrayerModel getClosestPrayer(DashboardMosqueModel dashboardMosqueModel) {
     dashboardMosqueModel.prayerTimes.removeWhere(removeNonPrayers);
-    PrayerModel closestPrayer = dashboardMosqueModel.prayerTimes.first;
-    for (PrayerModel prayer in dashboardMosqueModel.prayerTimes) {
-      if (closestPrayer.prayerTime.isBefore(prayer.prayerTime)) {
-        closestPrayer = prayer;
-      } else {
-        continue;
-      }
+
+  DateTime currentTime =DateTime.now();
+  
+  for (PrayerModel prayer in dashboardMosqueModel.prayerTimes){
+    if(currentTime.isBefore(prayer.prayerTime)){
+      return prayer;
+    } else{
+      continue;
     }
-    return closestPrayer;
   }
+  //Get fajr for the next day
+  return prayerTimeBloc.mosqueModelTomorrow.prayerTimes[0];
+
+
+
+
+
+    // PrayerModel closestPrayer = dashboardMosqueModel.prayerTimes.first;
+    // for (PrayerModel prayer in dashboardMosqueModel.prayerTimes) {
+    //   if (closestPrayer.prayerTime.isBefore(prayer.prayerTime)) {
+    //     closestPrayer = prayer;
+    //   } else {
+    //     continue;
+    //   }
+    // }
+    // return closestPrayer;
+  }
+
 
   bool removeNonPrayers(prayer) {
     return prayer.prayerName == "Sunrise" ||

@@ -7,9 +7,9 @@ import 'package:location/location.dart';
 class PrayerTimeBloc {
   final _prayerTimeRepository = PrayerTimeRepository();
   final _prayerTimeFetcher = PublishSubject<DashboardMosqueModel>();
-
+  
   DashboardMosqueModel mosqueModel;
-
+  DashboardMosqueModel mosqueModelTomorrow;
   Observable<DashboardMosqueModel> get allPrayers => _prayerTimeFetcher.stream;
 
   fetchAllPrayers() async {
@@ -20,8 +20,8 @@ class PrayerTimeBloc {
       lat = obj["latitude"];
       long = obj["longitude"];
       double direction = qiblaDirection(lat,long);
-      DashboardMosqueModel mosqueModel =
-          await _prayerTimeRepository.fetchPrayerTimes(lat, long);
+      this.mosqueModel = await _prayerTimeRepository.fetchPrayerTimes(lat, long);
+      this.mosqueModelTomorrow =await _prayerTimeRepository.fetchPrayerTimesTomorrow(lat, long);
       _prayerTimeFetcher.sink.add(mosqueModel);
     });
   }

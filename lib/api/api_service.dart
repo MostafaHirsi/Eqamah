@@ -14,4 +14,10 @@ class PrayerTimeProvider {
     final response = await http.get('http://api.aladhan.com/v1/timings?latitude=${lat.toStringAsPrecision(7)}&longitude=${long.toStringAsPrecision(7)}&method=2&timezonestring=Europe/London');
     return DashboardMosqueModel.fromJson(json.decode(response.body));
   }
+
+  Future<DashboardMosqueModel> getPrayerTimesTomorrow(double lat, double long) async {
+    int tomorrow =DateTime.now().add(Duration(days: 1)).millisecondsSinceEpoch;
+    final response = await http.get('http://api.aladhan.com/v1/timings/${tomorrow}?latitude=${lat.toStringAsPrecision(7)}&longitude=${long.toStringAsPrecision(7)}&method=2&timezonestring=Europe/London');
+    return DashboardMosqueModel.fromJson(json.decode(response.body));
+  }
 }

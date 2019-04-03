@@ -1,3 +1,5 @@
+import 'package:eqamah/bloc/home_bloc.dart';
+import 'package:eqamah/models/dashboard/mosque_model.dart';
 import 'package:eqamah/ui/pages/event.dart';
 import 'package:eqamah/ui/pages/home.dart';
 import 'package:eqamah/ui/pages/info.dart';
@@ -23,15 +25,30 @@ class _NavigationPageState extends State<NavigationPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    prayerTimeBloc.fetchAllPrayers();
+
     return Scaffold(
-      
-      appBar: tabIndex != 2 && tabIndex !=0  ? AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0, 
-        actions: buildActions(),
-      ) : null,
+      appBar: tabIndex != 2 && tabIndex != 0
+          ? AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              actions: buildActions(),
+            )
+          : null,
       backgroundColor: Theme.of(context).primaryColor,
-      body: pages[tabIndex],
+      body: StreamBuilder(
+        stream: prayerTimeBloc.allPrayers,
+        builder: (context, AsyncSnapshot<DashboardMosqueModel> snapshot) {
+          if (snapshot.hasData) {
+            return pages[tabIndex];
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
         onTap: (tappedIndex) {
@@ -53,7 +70,7 @@ class _NavigationPageState extends State<NavigationPage> {
   List<Widget> buildActions() {
     // switch(){
     //   case "Home":
-       
+
     //   break;
     //   case 2:
     //   break;
@@ -66,14 +83,11 @@ class _NavigationPageState extends State<NavigationPage> {
           ? IconButton(
               icon: Icon(
                 FontAwesomeIcons.mosque,
-                
               ),
-               onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => MosquesPage()));
-                        },
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => MosquesPage()));
+              },
             )
           : Container(),
       tabIndex == 1
