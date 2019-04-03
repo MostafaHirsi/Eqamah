@@ -30,13 +30,13 @@ class MosqueBanner extends StatelessWidget {
           child: new CachedNetworkImage(
             imageUrl:
               bannerImg,
-            placeholder: Container(
-              height: 300.0,
-              alignment: FractionalOffset.center,
-              child: Container(
-                child: new CircularProgressIndicator(),
-              ),
-            ),
+            // placeholder: Container(
+            //   height: 300.0,
+            //   alignment: FractionalOffset.center,
+            //   child: Container(
+            //     child: new CircularProgressIndicator(),
+            //   ),
+            // ),
             errorWidget: new Icon(Icons.error),
             fit: BoxFit.fitHeight,
           ),
