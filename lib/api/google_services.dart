@@ -1,7 +1,6 @@
 
 import 'package:eqamah/utils/keys.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 class GoogleServices {
   static Future<dynamic> get(int maxWidth, String photoRef) async {

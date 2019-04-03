@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eqamah/api/google_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'dart:math' as Math;
 import 'package:location/location.dart' as GPSLocation;
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart';
 
 class MapsPage extends StatefulWidget {
@@ -48,14 +51,27 @@ class MapsPageState extends State<MapsPage> {
     return Scaffold(
         body: new Stack(
       children: <Widget>[
-        GoogleMap(
-          mapType: MapType.normal,
-          myLocationEnabled: true,
-          initialCameraPosition: _kGooglePlex,
-          onMapCreated: _onMapCreated,
-          markers: markers,
-          // compassEnabled: true,
-        ),
+        FutureBuilder<Map<String, double>>(
+            future: location.getLocation(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var lat = snapshot.data["latitude"];
+                var long = snapshot.data["longitude"];
+                return GoogleMap(
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(lat, long),
+                    zoom: 14.4746,
+                  ),
+                  onMapCreated: _onMapCreated,
+                  markers: markers,
+                  // compassEnabled: true,
+                );
+              } else {
+                return CircularProgressIndicator();
+              }
+            }),
         Container(
           alignment: Alignment(1.0, -1.0),
           margin: EdgeInsets.only(top: 10.0),
@@ -110,6 +126,7 @@ class MapsPageState extends State<MapsPage> {
         ),
       );
       populateMarkers(_placesSearchResponse);
+      setState(() {});
     });
   }
 
@@ -120,25 +137,28 @@ class MapsPageState extends State<MapsPage> {
         // Marker marker = await _addMarker(searchResult);
         Location location = searchResult.geometry.location;
         Marker marker = new Marker(
+          infoWindow: InfoWindow(
+            title: searchResult.name,
+            snippet: searchResult.vicinity,
+            onTap: () {
+              // print(searchResult.name + "@£");
+              _selectedPlace = searchResult;
+              // setState(() {
+              //   _isVisible = true;
+              // });
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return MosquePlaceDetail(
+                    selectedPlace: _selectedPlace,
+                  );
+                },
+              );
+            },
+          ),
           markerId: new MarkerId(
             searchResult.placeId,
           ),
-          onTap: () {
-            // print(searchResult.name + "@£");
-            _selectedPlace = searchResult;
-            // setState(() {
-            //   _isVisible = true;
-            // });
-            showModalBottomSheet<void>(
-              context: context,
-              builder: (BuildContext context) {
-                return MosqueInfoCard(
-                  isVisible: true,
-                  selectedPlace: _selectedPlace,
-                );
-              },
-            );
-          },
           position: LatLng(location.lat, location.lng),
         );
         markers.add(marker);
@@ -173,13 +193,23 @@ class MapsPageState extends State<MapsPage> {
   }
 }
 
-class MosqueInfoCard extends StatelessWidget {
-  final bool isVisible;
+class MosquePlaceDetail extends StatefulWidget {
   final PlacesSearchResult selectedPlace;
 
-  const MosqueInfoCard(
-      {Key key, @required this.isVisible, @required this.selectedPlace})
-      : super(key: key);
+  MosquePlaceDetail({Key key, this.selectedPlace}) : super(key: key);
+  @override
+  MosquePlaceDetailState createState() => MosquePlaceDetailState(
+        selectedPlace: selectedPlace,
+      );
+}
+
+class MosquePlaceDetailState extends State<MosquePlaceDetail> {
+  final PlacesSearchResult selectedPlace;
+  final places =
+      new GoogleMapsPlaces("AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg");
+  Uint8List imageBytes = null;
+
+  MosquePlaceDetailState({this.selectedPlace});
 
   @override
   Widget build(BuildContext context) {
@@ -190,34 +220,130 @@ class MosqueInfoCard extends StatelessWidget {
         alignment: Alignment(0.0, 1.0),
         child: Card(
           shape: BeveledRectangleBorder(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: ListView(
             children: <Widget>[
               Container(
                 margin: EdgeInsets.all(15.0),
                 child: Text(
                   selectedPlace?.name ?? "",
                   style: Theme.of(context).textTheme.headline,
+                  textAlign: TextAlign.center,
                 ),
               ),
-              Container(
-                child: Text(
-                  selectedPlace?.types?.first ?? "",
-                  style: Theme.of(context).textTheme.subhead,
-                ),
-              ),
-              new FutureBuilder(
-                future: _loadImage(),
-                builder: (BuildContext context, AsyncSnapshot<dynamic> image) {
-                  if (image != null && image.hasData) {
-                    return image.data; // image is ready
+              FutureBuilder(
+                future: places.getDetailsByPlaceId(selectedPlace.placeId),
+                builder: (_, mosqueSnapshot) {
+                  if (mosqueSnapshot.hasData) {
+                    PlacesDetailsResponse response = mosqueSnapshot.data;
+                    PlaceDetails placeDetails = response.result;
+                    return Column(
+                      children: <Widget>[
+                        ListTile(
+                          leading: Icon(Icons.phone),
+                          title: Text(
+                            placeDetails.formattedPhoneNumber,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.place),
+                          title: Text(
+                            placeDetails.formattedAddress,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.web_asset),
+                          title: InkWell(
+                            child: new Text(
+                              placeDetails.website,
+                              style: TextStyle(
+                                color: Color(0xFF663366),
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            onTap: () => launch(placeDetails.website),
+                          ),
+                        ),
+                        SizedBox(
+                            height: 200.0,
+                            child: PageView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: placeDetails.photos.length,
+                              itemBuilder: (_, index) {
+                                Photo placePhoto = placeDetails.photos[index];
+                                return Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Flexible(
+                                      flex: 1,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.chevron_left,
+                                          color: index > 0
+                                              ? Colors.black
+                                              : Colors.grey,
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                    ),
+                                    Flexible(
+                                      flex: 8,
+                                      child: Container(
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.fitHeight,
+                                          placeholder: Icon(
+                                            Icons.picture_in_picture,
+                                            size: 400.0,
+                                          ),
+                                          imageUrl: buildPhotoURL(
+                                              placePhoto.photoReference),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      flex: 1,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.chevron_right,
+                                          color:
+                                              index < placeDetails.photos.length
+                                                  ? Colors.black
+                                                  : Colors.grey,
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ))
+                      ],
+                    );
                   } else {
-                    return new Container(); // placeholder
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
                 },
-              )
+              ),
+              // Container(
+              //   child: new FutureBuilder(
+              //     future: loadImage(),
+              //     builder:
+              //         (BuildContext context, AsyncSnapshot<Uint8List> image) {
+              //       if (imageBytes != null) {
+              //         return Image.memory(
+              //           imageBytes,
+              //           alignment: Alignment.topCenter,
+              //         );
+              //       } else {
+              //         return new Center(
+              //           child: CircularProgressIndicator(),
+              //         );
+              //       }
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -225,8 +351,16 @@ class MosqueInfoCard extends StatelessWidget {
     );
   }
 
-  _loadImage() async {
-    dynamic response = await GoogleServices.get(
-        200, selectedPlace?.photos?.first?.photoReference);
+  String buildPhotoURL(String photoReference) {
+    return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg";
+  }
+
+  Future<Uint8List> loadImage() async {
+    if (imageBytes == null) {
+      dynamic response = await GoogleServices.get(
+          200, selectedPlace?.photos?.first?.photoReference);
+      imageBytes = response.bodyBytes;
+    }
+    return imageBytes;
   }
 }
