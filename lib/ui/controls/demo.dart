@@ -51,7 +51,9 @@ class MapsPageState extends State<MapsPage> {
     return Scaffold(
         body: new Stack(
       children: <Widget>[
-        FutureBuilder<Map<String, double>>(
+        IgnorePointer(
+          ignoring: _selectedPlace == null,
+          child: FutureBuilder<Map<String, double>>(
             future: location.getLocation(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -59,6 +61,12 @@ class MapsPageState extends State<MapsPage> {
                 var long = snapshot.data["longitude"];
                 return GoogleMap(
                   mapType: MapType.normal,
+                  trackCameraPosition: false,
+                  scrollGesturesEnabled: _selectedPlace == null,
+                  rotateGesturesEnabled: _selectedPlace == null,
+                  tiltGesturesEnabled: _selectedPlace == null,
+                  zoomGesturesEnabled: _selectedPlace == null,
+                  compassEnabled: _selectedPlace == null,
                   myLocationEnabled: true,
                   initialCameraPosition: CameraPosition(
                     target: LatLng(lat, long),
@@ -66,12 +74,15 @@ class MapsPageState extends State<MapsPage> {
                   ),
                   onMapCreated: _onMapCreated,
                   markers: markers,
-                  // compassEnabled: true,
                 );
               } else {
-                return CircularProgressIndicator();
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               }
-            }),
+            },
+          ),
+        ),
         Container(
           alignment: Alignment(1.0, -1.0),
           margin: EdgeInsets.only(top: 10.0),
@@ -140,13 +151,13 @@ class MapsPageState extends State<MapsPage> {
           infoWindow: InfoWindow(
             title: searchResult.name,
             snippet: searchResult.vicinity,
-            onTap: () {
+            onTap: () async {
               // print(searchResult.name + "@£");
               _selectedPlace = searchResult;
               // setState(() {
               //   _isVisible = true;
               // });
-              showModalBottomSheet<void>(
+              await showModalBottomSheet<void>(
                 context: context,
                 builder: (BuildContext context) {
                   return MosquePlaceDetail(
@@ -154,6 +165,9 @@ class MapsPageState extends State<MapsPage> {
                   );
                 },
               );
+              setState(() {
+                _selectedPlace = null;
+              });
             },
           ),
           markerId: new MarkerId(
@@ -223,11 +237,43 @@ class MosquePlaceDetailState extends State<MosquePlaceDetail> {
           child: ListView(
             children: <Widget>[
               Container(
+                margin: EdgeInsets.symmetric(vertical: 5.0),
+                height: 1.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 5.0),
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: 5.0),
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      Icons.home,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10.0),
+                color: Colors.grey.shade300,
+                height: 1.0,
+              ),
+              Container(
                 margin: EdgeInsets.all(15.0),
                 child: Text(
                   selectedPlace?.name ?? "",
                   style: Theme.of(context).textTheme.headline,
                   textAlign: TextAlign.center,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               FutureBuilder(
@@ -241,13 +287,13 @@ class MosquePlaceDetailState extends State<MosquePlaceDetail> {
                         ListTile(
                           leading: Icon(Icons.phone),
                           title: Text(
-                            placeDetails.formattedPhoneNumber,
+                            placeDetails.formattedPhoneNumber ?? "N/A",
                           ),
                         ),
                         ListTile(
                           leading: Icon(Icons.place),
                           title: Text(
-                            placeDetails.formattedAddress,
+                            placeDetails.formattedAddress ?? "N/A",
                           ),
                         ),
                         ListTile(
@@ -272,7 +318,8 @@ class MosquePlaceDetailState extends State<MosquePlaceDetail> {
                                 Photo placePhoto = placeDetails.photos[index];
                                 return Row(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Flexible(
                                       flex: 1,
