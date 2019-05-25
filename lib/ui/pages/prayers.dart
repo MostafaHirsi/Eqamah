@@ -4,9 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
-class PrayersFullScreen extends StatelessWidget {
-  final List<PrayerModel> prayers;
-  const PrayersFullScreen({this.prayers}) : super();
+class PrayersFullScreen extends StatefulWidget {
+  const PrayersFullScreen() : super();
+
+  @override
+  _PrayersFullScreenState createState() => _PrayersFullScreenState();
+}
+
+class _PrayersFullScreenState extends State<PrayersFullScreen> {
+  DateTime selectedDate;
+  List<PrayerModel> prayers = null;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedDate = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,27 +28,52 @@ class PrayersFullScreen extends StatelessWidget {
           //title: Text(eventListName),
           actions: <Widget>[
             Theme(
-              data: ThemeData(primaryColor: Colors.blueGrey, primarySwatch: Colors.blueGrey),
-              child: new Builder(builder: (contextOne) => IconButton(
-                icon: Icon(
-                  Icons.calendar_today,
-                  size: 25.0,
-                  color: Colors.white,
-                ),
-                onPressed: () async {
-                  DateTime daySelected = await showDatePicker(
-                      firstDate: DateTime.now(),
-                      initialDate: DateTime.now(),
-                      lastDate: DateTime.now().add(Duration(days: 31)),
-                      context: contextOne);
-                },
-              ),)
-            )
+                data: ThemeData(
+                    primaryColor: Colors.blueGrey,
+                    primarySwatch: Colors.blueGrey),
+                child: new Builder(
+                  builder: (contextOne) => IconButton(
+                        icon: Icon(
+                          Icons.calendar_today,
+                          size: 25.0,
+                          color: Colors.white,
+                        ),
+                        onPressed: () async {
+                          DateTime picked = await showDatePicker(
+                              firstDate: DateTime.now(),
+                              initialDate: DateTime.now(),
+                              lastDate: DateTime.now().add(Duration(days: 31)),
+                              context: contextOne);
+                          if (picked != null && picked != selectedDate)
+                            setState(() async {
+                              selectedDate = picked;
+                              await prayerTimeBloc.fetchAllPrayers();
+                              this.prayers =
+                                  prayerTimeBloc.mosqueModel.prayerTimes;
+                            });
+                        },
+                      ),
+                ))
           ],
         ),
         backgroundColor: Colors.white,
-        body: ListView.builder(
-            itemBuilder: buildPrayerItem, itemCount: prayers.length)
+        body: FutureBuilder(
+          future: prayerTimeBloc.fetchAllPrayers(),
+          builder: (buildContext, snapshot) {
+            if (snapshot.hasData) {
+              this.prayers = prayerTimeBloc.mosqueModel.prayerTimes;
+              return ListView.builder(
+                  itemBuilder: buildPrayerItem, itemCount: this.prayers.length);
+            } else {
+              return Container(
+                margin: EdgeInsets.all(
+                  10.0,
+                ),
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        )
 
         //         margin: EdgeInsets.symmetric(vertical: 0.0),
         //         alignment: FractionalOffset.center,
@@ -74,20 +112,8 @@ class PrayersFullScreen extends StatelessWidget {
         );
   }
 
-  // List<PrayerModel> getClosestPrayer(DashboardMosqueModel dashboardMosqueModel) {
-  //     dashboardMosqueModel.prayerTimes.removeWhere(removeNonPrayers);
-  //     return dashboardMosqueModel.prayerTimes;
-  //   }
-
-  //   bool removeNonPrayers(prayer) {
-  //     return prayer.prayerName == "Sunrise" ||
-  //         prayer.prayerName == "Sunset" ||
-  //         prayer.prayerName == "Imsak" ||
-  //         prayer.prayerName == "Midnight";
-  //   }
-
   Widget buildPrayerItem(BuildContext context, int index) {
-    PrayerModel prayer = prayers[index];
+    PrayerModel prayer = this.prayers[index];
 
     return new PrayerItem(
       prayer: prayer,

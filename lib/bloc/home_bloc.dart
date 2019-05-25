@@ -24,6 +24,7 @@ class PrayerTimeBloc {
       this.mosqueModelTomorrow =await _prayerTimeRepository.fetchPrayerTimesTomorrow(lat, long);
       _prayerTimeFetcher.sink.add(mosqueModel);
     });
+    return true;
   }
 
   dispose() {

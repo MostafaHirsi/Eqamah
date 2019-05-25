@@ -24,7 +24,7 @@ class MapsPageState extends State<MapsPage> {
   TextEditingController searchController = new TextEditingController();
   var location = new GPSLocation.Location();
   final places =
-      new GoogleMapsPlaces("AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg");
+      new GoogleMapsPlaces(apiKey:"AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg");
   bool focused = false;
   double _radius = 800.0;
   Offset offset = new Offset(0.0, -200.0);
@@ -61,7 +61,6 @@ class MapsPageState extends State<MapsPage> {
                 var long = snapshot.data["longitude"];
                 return GoogleMap(
                   mapType: MapType.normal,
-                  trackCameraPosition: false,
                   scrollGesturesEnabled: _selectedPlace == null,
                   rotateGesturesEnabled: _selectedPlace == null,
                   tiltGesturesEnabled: _selectedPlace == null,
@@ -220,7 +219,7 @@ class MosquePlaceDetail extends StatefulWidget {
 class MosquePlaceDetailState extends State<MosquePlaceDetail> {
   final PlacesSearchResult selectedPlace;
   final places =
-      new GoogleMapsPlaces("AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg");
+      new GoogleMapsPlaces(apiKey:"AIzaSyAj04OTDCjEcRdb_Bt-0pPmTzaMijV65cg");
   Uint8List imageBytes = null;
 
   MosquePlaceDetailState({this.selectedPlace});
